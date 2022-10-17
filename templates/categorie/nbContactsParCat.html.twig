@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}statistiques{% endblock %}
+
+{% block body %}
+{% set total = 0 %}
+<h1 class="text-center pt-2">Statistiques des catégories</h1>
+<hr>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th scope="col-8">Libellé de la catégorie</th>
+			<th scope="col">Nombre de contacts</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for laCategorie in lesCategories %}
+			<tr>
+				<th scope="row">
+					{{laCategorie.libelle}}
+				</th>
+				<td>{{laCategorie.nbContacts}}</td>
+			</tr>
+			{% set total = total +laCategorie.nbContacts %}
+	{% endfor %}
+	</tbody>
+	<tfoot class="table-warning">
+		<tr>
+			<th scope="row">Total</th>
+			<th scope="col"> {{ total }} </th>
+		</tr>
+
+	</tfoot>
+</table>
+
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
+
+{% endblock %}
+{% block javascripts %}
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+	window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+theme: "light2", // "light1", "light2", "dark1", "dark2"
+exportEnabled: true,
+animationEnabled: true,
+title: {
+text: "Desktop Browser Market Share in 2016"
+},
+data: [
+{
+type: "pie",
+startAngle: 25,
+toolTipContent: "<b>{label}</b>: {y}%",
+showInLegend: "true",
+legendText: "{label}",
+indexLabelFontSize: 16,
+indexLabel: "{label} - {y}%",
+dataPoints: [
+				{{data|raw}}
+			]
+}]
+});
+chart.render();
+
+}
+</script>
+{% endblock %}
+
+
